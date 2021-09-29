@@ -1,6 +1,8 @@
 # social
 
-A new Flutter application.
+Social media platform built on Flutter and Firebase
+
+
 
 ## Getting Started
 
