@@ -1,20 +1,43 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:social/models/post_model.dart';
 import 'package:social/providers/auth_provider.dart';
 import 'package:social/providers/emit_provider.dart';
 import 'package:social/providers/loading_provider.dart';
 import 'package:social/providers/storage_provider.dart';
 
-class CreatePostScreen extends StatelessWidget {
+class CreateEditPostScreen extends StatelessWidget {
+  // post!=null means Editing post not new one
+  PostModel? post;
+
+  CreateEditPostScreen({
+    this.post,
+  });
+
   @override
   Widget build(BuildContext context) {
+    if (post != null) {
+      // post!=null means Editing post not new one
+      Provider.of<StorageProvider>(context, listen: false).postController.text =
+          post!.text!; // Post Text
+
+      if (post!.postImage != null)
+        Provider.of<StorageProvider>(context).postImage =
+            XFile(post!.postImage!);
+    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(" Add Post"),
+        title: Text(post != null ? 'Edit Post' : "Add Post"),
         actions: [
           TextButton(
             onPressed: () async {
+/*              if (post != null) {
+                // if Editing Post , Delete the old one first then make new post
+                await Provider.of<AuthProvider>(context, listen: false)
+                    .deletePost(post!);
+              }*/
               Provider.of<LoadingProvider>(context, listen: false)
                   .startPostLoading();
 
@@ -22,19 +45,23 @@ class CreatePostScreen extends StatelessWidget {
                   .createPost(context)
                   .catchError(
                 (onError) {
-                  print(onError);
                   Provider.of<EmitProvider>(context, listen: false)
                       .emitPostCreatedFailedState();
                 },
               );
               Provider.of<LoadingProvider>(context, listen: false)
                   .finishPostLoading();
+
+              // Clear before pop
               Provider.of<StorageProvider>(context, listen: false)
-                  .postController.clear();
+                  .postController
+                  .clear();
+              Provider.of<StorageProvider>(context, listen: false).postImage =
+                  null;
               Navigator.pop(context);
             },
             child: Text(
-              "Post",
+              post != null ? "Edit" : "Post",
             ),
           ),
         ],
@@ -120,10 +147,11 @@ class CreatePostScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextButton(
-                      onPressed: Provider.of<StorageProvider>(context).postImage !=
-                          null
-                          ? null
-                          :() {},
+                      onPressed:
+                          Provider.of<StorageProvider>(context).postImage !=
+                                  null
+                              ? null
+                              : () {},
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

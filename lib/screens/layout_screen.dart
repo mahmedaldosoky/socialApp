@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social/providers/auth_provider.dart';
 import 'package:social/providers/layout_provider.dart';
+import 'package:social/providers/loading_provider.dart';
 import 'package:social/screens/create_post_screen.dart';
 
 
@@ -21,9 +22,9 @@ class LayoutScreen extends StatelessWidget {
               child: CircularProgressIndicator(),
             ),
           )
-        : Scaffold(
-      /*    floatingActionButton: FloatingActionButton(onPressed: () {
-  Navigator.push(context, MaterialPageRoute(builder: (builder)=>CommentScreen()));
+        : Scaffold(/*
+      floatingActionButton: FloatingActionButton(onPressed: () {
+  Provider.of<LoadingProvider>(context).x();
             }),*/
             appBar: AppBar(
               title: Text(
@@ -59,7 +60,7 @@ class LayoutScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (builder) => CreatePostScreen(),
+                      builder: (builder) => CreateEditPostScreen(),
                     ),
                   );
                 } else {

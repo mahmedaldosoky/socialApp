@@ -6,6 +6,7 @@ import 'package:social/models/post_model.dart';
 import 'package:social/providers/auth_provider.dart';
 import 'package:social/screens/comment_screen.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:social/screens/create_post_screen.dart';
 
 class Post extends StatefulWidget {
   final PostModel post;
@@ -88,8 +89,17 @@ class _PostState extends State<Post> {
                               ListTile(
                                 title: Text('Edit Post'),
                                 leading: Icon(Icons.edit),
-
-                                onTap: () {}, // todo:
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (builder) =>
+                                          CreateEditPostScreen(
+                                        post: widget.post,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                               ListTile(
                                 title: Text(

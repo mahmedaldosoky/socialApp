@@ -156,6 +156,17 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
+  Future updatePostOnFireStore(PostModel post) async {
+    await firestore.collection('posts').doc('IjK2C0CrkrDHF6e0Zp6o').set(post.toMap()).then((value) async {
+      await firestore.collection('posts').doc('IjK2C0CrkrDHF6e0Zp6o').update({
+        'postId': 'IjK2C0CrkrDHF6e0Zp6o',
+      }); // Add postId to post doc in fireStore
+      print('uploaded post successfully');
+    }).catchError((onError) {
+      print(onError);
+    });
+  }
+
   Future<List<PostModel>> getPosts() async {
     posts = []; // delete posts before downloading posts
     await firestore.collection('posts').get().then((value) {
