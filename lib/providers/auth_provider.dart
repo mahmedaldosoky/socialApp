@@ -214,7 +214,7 @@ class AuthProvider extends ChangeNotifier {
     await Future.delayed(Duration(milliseconds: 700));
     return await postDocRef.get().then((value) {
       PostModel postData = PostModel.fromJson(value.data()!);
-      return postData.likesNum!;
+      return postData.likesNum??'0'; // if No likes return 0 instead of null
     });
   }
 
@@ -228,6 +228,16 @@ class AuthProvider extends ChangeNotifier {
 
   Future postLikeButtonClicked(PostModel post) async {
     await isPostLikedByMe(post) ? disLikePost(post) : likePost(post);
+
+  }
+
+  Future deletePost(PostModel post) async {
+    await firestore.collection('posts').doc(post.postId).delete().then((value) {
+      EmitProvider().emitDeletePostSuccessState();
+    }).catchError((onError) {
+      EmitProvider().emitDeletePostFailedState();
+    });
+    notifyListeners();
   }
 
   Future<List<UserModel>> getChats() async {
@@ -431,7 +441,7 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-  // Comments
+  /// Comments
   Future<void> addComment(PostModel postData, String commentText) async {
     CommentModel commentData = CommentModel(
       commentText: commentText,
@@ -545,8 +555,6 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<bool> isCommentLikedByMe(CommentModel commentData) async {
-    print(commentData.commentText);
-    print(commentData.uid);
     var commentDocRef = firestore
         .collection('posts')
         .doc(commentData.postId)

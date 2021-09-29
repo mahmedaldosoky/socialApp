@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:social/models/post_model.dart';
 import 'package:social/providers/auth_provider.dart';
 import 'package:social/screens/comment_screen.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class Post extends StatefulWidget {
   final PostModel post;
@@ -38,8 +40,6 @@ class _PostState extends State<Post> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                 children: [
                   CircleAvatar(
                     backgroundImage: NetworkImage(
@@ -78,7 +78,42 @@ class _PostState extends State<Post> {
                   ),
                   Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showBarModalBottomSheet(
+                        context: context,
+                        builder: (context) => Container(
+                          height: MediaQuery.of(context).size.height * .2,
+                          child: ListView(
+                            children: [
+                              ListTile(
+                                title: Text('Edit Post'),
+                                leading: Icon(Icons.edit),
+
+                                onTap: () {}, // todo:
+                              ),
+                              ListTile(
+                                title: Text(
+                                  'Delete Post',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                leading: Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.red,
+                                ),
+                                onTap: () async {
+                                  await Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .deletePost(widget.post);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                     icon: FaIcon(FontAwesomeIcons.ellipsisH),
                   ),
                 ],
@@ -334,8 +369,8 @@ class _PostState extends State<Post> {
   }
 
   Future<dynamic> showCommentsModalBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
-        isScrollControlled: true,
+    return showBarModalBottomSheet(
+        //  isScrollControlled: true,
         context: context,
         builder: (BuildContext builder) {
           return Container(

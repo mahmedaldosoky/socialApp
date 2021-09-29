@@ -6,7 +6,6 @@ import 'package:social/providers/emit_provider.dart';
 import 'package:social/providers/loading_provider.dart';
 import 'package:social/providers/storage_provider.dart';
 
-// ignore: must_be_immutable
 class CreatePostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,8 @@ class CreatePostScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              Provider.of<LoadingProvider>(context,listen: false).startPostLoading();
+              Provider.of<LoadingProvider>(context, listen: false)
+                  .startPostLoading();
 
               await Provider.of<StorageProvider>(context, listen: false)
                   .createPost(context)
@@ -27,7 +27,10 @@ class CreatePostScreen extends StatelessWidget {
                       .emitPostCreatedFailedState();
                 },
               );
-              Provider.of<LoadingProvider>(context,listen: false).finishPostLoading();
+              Provider.of<LoadingProvider>(context, listen: false)
+                  .finishPostLoading();
+              Provider.of<StorageProvider>(context, listen: false)
+                  .postController.clear();
               Navigator.pop(context);
             },
             child: Text(
@@ -94,11 +97,15 @@ class CreatePostScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextButton(
-                      onPressed: () async {
-                        await Provider.of<StorageProvider>(context,
-                                listen: false)
-                            .pickPostImage();
-                      },
+                      onPressed:
+                          Provider.of<StorageProvider>(context).postImage !=
+                                  null
+                              ? null
+                              : () async {
+                                  await Provider.of<StorageProvider>(context,
+                                          listen: false)
+                                      .pickPostImage();
+                                },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -113,7 +120,10 @@ class CreatePostScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: Provider.of<StorageProvider>(context).postImage !=
+                          null
+                          ? null
+                          :() {},
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

@@ -2,18 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 
 class EmitProvider extends ChangeNotifier {
-
-  emitPostCreatedSuccessState(){
+  emitPostCreatedSuccessState() {
     showToast('Post Created Successfully');
-  }  emitPostCreatedFailedState(){
-    showToast('Post Failure',backgroundColor: Colors.red);
   }
-  emitPostLikeSuccessState(){
-   // showToast('Post Created Successfully');
 
-  }  emitAddCommentSuccessState(){
+  emitPostCreatedFailedState() {
+    showToast('Post Failure', backgroundColor: Colors.red);
+  }
+
+  emitAddCommentSuccessState() {
     showToast('Comment Added');
-
   }
 
+  emitDeletePostSuccessState() {
+    showToast('Post Deleted');
+  }
+
+  emitDeletePostFailedState() {
+    showToast(
+      'Failed to delete post',
+      backgroundColor: Colors.red,
+    );
+  }
 }

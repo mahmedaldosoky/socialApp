@@ -9,7 +9,7 @@ class CommentListTile extends StatelessWidget {
   final UserModel userData;
   final Widget? trailing;
   final CommentModel commentData;
-  bool isLiked;
+ final bool isLiked;
 
   CommentListTile(
       {required this.userData,

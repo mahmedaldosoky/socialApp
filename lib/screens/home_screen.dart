@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    Padding(
+ /*                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 5.0, vertical: 3),
                       child: Container(
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               "https://image.freepik.com/free-photo/beautiful-asian-woman-talking-magaphone_8087-3737.jpg"),
                         ),
                       ),
-                    ),
+                    ),*/
                     ListView.separated(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
