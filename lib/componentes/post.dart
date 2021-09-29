@@ -370,7 +370,6 @@ class _PostState extends State<Post> {
 
   Future<dynamic> showCommentsModalBottomSheet(BuildContext context) {
     return showBarModalBottomSheet(
-        //  isScrollControlled: true,
         context: context,
         builder: (BuildContext builder) {
           return Container(
