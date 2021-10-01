@@ -84,7 +84,7 @@ class StorageProvider extends ChangeNotifier {
       await Provider.of<AuthProvider>(
         context,
         listen: false,
-      ).changeUserAttribute('image',
+      ).updateUserAttribute('image',
           profileImageLink); // update user profile image in fireStore with the new link
     }
 
@@ -106,7 +106,7 @@ class StorageProvider extends ChangeNotifier {
       await Provider.of<AuthProvider>(
         context,
         listen: false,
-      ).changeUserAttribute('cover',
+      ).updateUserAttribute('cover',
           coverImageLink); // update user cover in fireStore with the new link
     }
 
@@ -115,15 +115,15 @@ class StorageProvider extends ChangeNotifier {
     if (user.username != usernameController.text &&
         usernameController.text != '') {
       Provider.of<AuthProvider>(context, listen: false)
-          .changeUserAttribute('username', usernameController.text);
+          .updateUserAttribute('username', usernameController.text);
     }
     if (user.bio != bioController.text && bioController.text != '') {
       Provider.of<AuthProvider>(context, listen: false)
-          .changeUserAttribute('bio', bioController.text);
+          .updateUserAttribute('bio', bioController.text);
     }
     if (user.phone != phoneController.text && phoneController.text != '') {
       Provider.of<AuthProvider>(context, listen: false)
-          .changeUserAttribute('phone', phoneController.text);
+          .updateUserAttribute('phone', phoneController.text);
     }
 
     notifyListeners();
@@ -194,7 +194,7 @@ class StorageProvider extends ChangeNotifier {
     }
   }
 
-  Future editPost(BuildContext context, PostModel post) async {
+/*  Future editPostText(BuildContext context, PostModel post) async {
     if (postImage == null && postController.text == '') {
       print('No post or image');
       Provider.of<EmitProvider>(context, listen: false)
@@ -266,5 +266,7 @@ class StorageProvider extends ChangeNotifier {
       });
 
     }
-  }
+  }*/
+
+
 }

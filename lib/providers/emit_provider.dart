@@ -8,6 +8,12 @@ class EmitProvider extends ChangeNotifier {
 
   emitPostCreatedFailedState() {
     showToast('Post Failure', backgroundColor: Colors.red);
+  }  emitPostUpdateSuccessState() {
+    showToast('Post Updated Successfully');
+  }
+
+  emitPostUpdateFailedState() {
+    showToast('Post Update Failure', backgroundColor: Colors.red);
   }
 
   emitAddCommentSuccessState() {

@@ -8,6 +8,7 @@ import 'package:social/providers/auth_provider.dart';
 import 'package:social/screens/comment_screen.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social/screens/create_post_screen.dart';
+import 'package:social/screens/edit_post_screen.dart';
 
 class Post extends StatefulWidget {
   int postMaxLines = 5;
@@ -95,40 +96,20 @@ class _PostState extends State<Post> {
                                 height: MediaQuery.of(context).size.height * .2,
                                 child: ListView(
                                   children: [
-                                    ListTile(
-                                      title: Text('Edit Post'),
-                                      leading: Icon(Icons.edit),
-                                      onTap: () {
-                                        // Navigator.pop(context);
-                                /*        showBarModalBottomSheet(
-                                            context: context,
-                                            builder: (builder) {
-                                              return Container(
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    .3,
-                                                child: Center(
-                                                  child: TextField(
-                                                    controller:
-                                                        widget.newPostText,
-                                                    decoration:
-                                                        new InputDecoration(
-                                                      enabledBorder:
-                                                          const OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color:
-                                                                    Colors.grey,
-                                                                width: 55.0),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            });*/
-                                      },
-                                    ),
+                                    if (!(widget.post.postImage != null &&
+                                        widget.post.text == null))
+                                      ListTile(
+                                        title: Text('Edit Post'),
+                                        leading: Icon(Icons.edit),
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (builder) =>
+                                                      EditPostScreen(
+                                                          post: widget.post)));
+                                        },
+                                      ),
                                     ListTile(
                                       title: Text(
                                         'Delete Post',

@@ -138,7 +138,7 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-  changeUserAttribute(String attribute, String newValue) async {
+  updateUserAttribute(String attribute, String newValue) async {
     // change user attribute from fireStore
     await firestore.collection('users').doc(auth.currentUser!.uid).update({
       attribute: newValue,
@@ -161,14 +161,22 @@ class AuthProvider extends ChangeNotifier {
         .collection('posts')
         .doc(post.postId)
         .update(post.toMap())
-        .catchError((onError) {
+        .then((value) {
+      EmitProvider().emitPostUpdateSuccessState();
+    }).catchError((onError) {
       print(onError);
+      EmitProvider().emitPostUpdateFailedState();
     });
+    notifyListeners();
   }
 
   Future<List<PostModel>> getPosts() async {
     posts = []; // delete posts before downloading posts
-    await firestore.collection('posts').orderBy('dateTime',descending: true).get().then((value) {
+    await firestore
+        .collection('posts')
+        .orderBy('dateTime', descending: true)
+        .get()
+        .then((value) {
       value.docs.forEach((element) {
         PostModel postData = PostModel.fromJson(element.data());
 
