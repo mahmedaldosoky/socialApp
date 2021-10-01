@@ -1,6 +1,6 @@
 # Social App
 
-Social media platform built on Flutter and Firebase
+#### Social media platform for Android and iOS built on Flutter and Firebase
 
 ### Show some ❤️ and star the repo to support the project
 ![a](https://user-images.githubusercontent.com/37597841/135648877-61e0caed-47cf-4814-bac5-d855dfb56655.jpg)
