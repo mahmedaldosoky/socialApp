@@ -1,6 +1,11 @@
-# social
+# Social App
 
 Social media platform built on Flutter and Firebase
+
+# Show some ❤️ and star the repo to support the project
+
+
+![Alt text](https://l.top4top.io/p_2100nsleo1.png "Optional title")
 
 
 
