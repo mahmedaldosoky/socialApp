@@ -22,8 +22,8 @@ class PostModel {
     required this.postId,
     this.postImage,
     this.text,
-    this.commentsNum,
-    this.likesNum,
+    this.commentsNum='0',
+    this.likesNum='0',
   });
 
   static PostModel fromJson(Map<String, dynamic> json) {

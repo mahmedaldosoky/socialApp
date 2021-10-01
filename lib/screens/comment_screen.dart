@@ -40,7 +40,6 @@ class _CommentScreenState extends State<CommentScreen> {
                 userImage:
                     Provider.of<AuthProvider>(context).currentUserData!.image,
                 child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
                   itemCount: commentSnapshot.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     return FutureBuilder<UserModel>(

@@ -19,7 +19,7 @@ class LayoutProvider extends ChangeNotifier {
   List<Widget> screens = [
     HomeScreen(),
     ChatsScreen(),
-    CreateEditPostScreen(),
+    CreatePostScreen(),
     UsersScreen(),
     SettingsScreen(),
   ];

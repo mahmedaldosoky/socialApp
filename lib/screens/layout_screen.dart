@@ -60,7 +60,7 @@ class LayoutScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (builder) => CreateEditPostScreen(),
+                      builder: (builder) => CreatePostScreen(),
                     ),
                   );
                 } else {

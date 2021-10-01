@@ -132,7 +132,8 @@ class StorageProvider extends ChangeNotifier {
   Future createPost(context) async {
     if (postImage == null && postController.text == '') {
       print('No post or image');
-      Provider.of<EmitProvider>(context,listen: false).emitPostCreatedFailedState();
+      Provider.of<EmitProvider>(context, listen: false)
+          .emitPostCreatedFailedState();
       return;
     } else {
       // upload image if available then create post as object
@@ -143,16 +144,19 @@ class StorageProvider extends ChangeNotifier {
           folderPath: 'post-img',
         ).then(
           (value) {
-
             // post with image
             newPost = PostModel(
-              username:
-                  Provider.of<AuthProvider>(context,listen: false).currentUserData!.username,
-              uid: Provider.of<AuthProvider>(context,listen: false).currentUserData!.uid,
-              userImage:
-                  Provider.of<AuthProvider>(context,listen: false).currentUserData!.image,
+              username: Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserData!
+                  .username,
+              uid: Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserData!
+                  .uid,
+              userImage: Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserData!
+                  .image,
               dateTime: DateTime.now().toString(),
-              text: postController.text==''?null:postController.text,
+              text: postController.text == '' ? null : postController.text,
               postImage: value,
               postId: null,
             );
@@ -165,22 +169,102 @@ class StorageProvider extends ChangeNotifier {
       } else {
         // post without image
         newPost = PostModel(
-          username:
-              Provider.of<AuthProvider>(context,listen: false).currentUserData!.username,
-          uid: Provider.of<AuthProvider>(context,listen: false).currentUserData!.uid,
-          userImage: Provider.of<AuthProvider>(context,listen: false).currentUserData!.image,
+          username: Provider.of<AuthProvider>(context, listen: false)
+              .currentUserData!
+              .username,
+          uid: Provider.of<AuthProvider>(context, listen: false)
+              .currentUserData!
+              .uid,
+          userImage: Provider.of<AuthProvider>(context, listen: false)
+              .currentUserData!
+              .image,
           dateTime: DateTime.now().toString(),
-          text: postController.text==''?null:postController.text,
+          text: postController.text == '' ? null : postController.text,
           postId: null,
-
         );
       }
 
+      // upload post data to FireStore
       await Provider.of<AuthProvider>(context, listen: false)
-          .createPostOnFireStore(newPost).then((value){
+          .createPostOnFireStore(newPost)
+          .then((value) {
         Provider.of<EmitProvider>(context, listen: false)
             .emitPostCreatedSuccessState();
       });
+    }
+  }
+
+  Future editPost(BuildContext context, PostModel post) async {
+    if (postImage == null && postController.text == '') {
+      print('No post or image');
+      Provider.of<EmitProvider>(context, listen: false)
+          .emitPostCreatedFailedState();
+      return;
+    } else {
+      // upload image if available then create post as object
+      late PostModel newPost;
+      if (postImage != null) {
+        await postFile(
+          imageFile: File(postImage!.path),
+          folderPath: 'post-img',
+        ).then(
+          (value) {
+            // post with image
+            newPost = PostModel(
+              username: Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserData!
+                  .username,
+              uid: Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserData!
+                  .uid,
+              userImage: Provider.of<AuthProvider>(context, listen: false)
+                  .currentUserData!
+                  .image,
+              dateTime: DateTime.now().toString(),
+              text: postController.text == '' ? null : postController.text,
+              postImage: value,
+              postId: post.postId,
+              likesNum: post.likesNum,
+              commentsNum: post.commentsNum,
+            );
+          },
+        ).catchError(
+          (onError) {
+            print('Error uploading the image:' + onError);
+          },
+        );
+      } else {
+        print('ddddddxx');
+        // post without image
+        newPost = PostModel(
+          username: Provider.of<AuthProvider>(context, listen: false)
+              .currentUserData!
+              .username,
+          uid: Provider.of<AuthProvider>(context, listen: false)
+              .currentUserData!
+              .uid,
+          userImage: Provider.of<AuthProvider>(context, listen: false)
+              .currentUserData!
+              .image,
+          dateTime: DateTime.now().toString(),
+          text: postController.text == '' ? null : postController.text,
+          postId: post.postId,
+          likesNum: post.likesNum,
+          commentsNum: post.commentsNum,
+        );
+      }
+
+
+      print(newPost.postId);
+      // upload post data to FireStore
+      await Provider.of<AuthProvider>(context, listen: false)
+          .updatePostOnFireStore(newPost)
+          .then((value) {
+        Provider.of<EmitProvider>(context, listen: false)
+            .emitPostCreatedSuccessState();
+        notifyListeners();
+      });
+
     }
   }
 }

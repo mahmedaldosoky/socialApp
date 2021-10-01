@@ -1,67 +1,40 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:social/models/post_model.dart';
 import 'package:social/providers/auth_provider.dart';
 import 'package:social/providers/emit_provider.dart';
 import 'package:social/providers/loading_provider.dart';
 import 'package:social/providers/storage_provider.dart';
 
-class CreateEditPostScreen extends StatelessWidget {
-  // post!=null means Editing post not new one
-  PostModel? post;
-
-  CreateEditPostScreen({
-    this.post,
-  });
-
+class CreatePostScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (post != null) {
-      // post!=null means Editing post not new one
-      Provider.of<StorageProvider>(context, listen: false).postController.text =
-          post!.text!; // Post Text
-
-      if (post!.postImage != null)
-        Provider.of<StorageProvider>(context).postImage =
-            XFile(post!.postImage!);
-    }
     return Scaffold(
       appBar: AppBar(
-        title: Text(post != null ? 'Edit Post' : "Add Post"),
+        title: Text(" Add Post"),
         actions: [
           TextButton(
             onPressed: () async {
-/*              if (post != null) {
-                // if Editing Post , Delete the old one first then make new post
-                await Provider.of<AuthProvider>(context, listen: false)
-                    .deletePost(post!);
-              }*/
               Provider.of<LoadingProvider>(context, listen: false)
                   .startPostLoading();
 
               await Provider.of<StorageProvider>(context, listen: false)
                   .createPost(context)
                   .catchError(
-                (onError) {
+                    (onError) {
+                  print(onError);
                   Provider.of<EmitProvider>(context, listen: false)
                       .emitPostCreatedFailedState();
                 },
               );
               Provider.of<LoadingProvider>(context, listen: false)
                   .finishPostLoading();
-
-              // Clear before pop
               Provider.of<StorageProvider>(context, listen: false)
-                  .postController
-                  .clear();
-              Provider.of<StorageProvider>(context, listen: false).postImage =
-                  null;
+                  .postController.clear();
               Navigator.pop(context);
             },
             child: Text(
-              post != null ? "Edit" : "Post",
+              "Post",
             ),
           ),
         ],
@@ -74,8 +47,8 @@ class CreateEditPostScreen extends StatelessWidget {
               Provider.of<LoadingProvider>(context).postLoading
                   ? LinearProgressIndicator()
                   : Container(
-                      width: 0,
-                    ),
+                width: 0,
+              ),
               SizedBox(
                 height: 5,
               ),
@@ -106,8 +79,8 @@ class CreateEditPostScreen extends StatelessWidget {
                 child: TextField(
                   textAlignVertical: TextAlignVertical.top,
                   controller:
-                      Provider.of<StorageProvider>(context, listen: false)
-                          .postController,
+                  Provider.of<StorageProvider>(context, listen: false)
+                      .postController,
                   keyboardType: TextInputType.multiline,
                   textInputAction: TextInputAction.newline,
                   expands: true,
@@ -125,14 +98,14 @@ class CreateEditPostScreen extends StatelessWidget {
                   Expanded(
                     child: TextButton(
                       onPressed:
-                          Provider.of<StorageProvider>(context).postImage !=
-                                  null
-                              ? null
-                              : () async {
-                                  await Provider.of<StorageProvider>(context,
-                                          listen: false)
-                                      .pickPostImage();
-                                },
+                      Provider.of<StorageProvider>(context).postImage !=
+                          null
+                          ? null
+                          : () async {
+                        await Provider.of<StorageProvider>(context,
+                            listen: false)
+                            .pickPostImage();
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -147,11 +120,10 @@ class CreateEditPostScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextButton(
-                      onPressed:
-                          Provider.of<StorageProvider>(context).postImage !=
-                                  null
-                              ? null
-                              : () {},
+                      onPressed: Provider.of<StorageProvider>(context).postImage !=
+                          null
+                          ? null
+                          :() {},
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -172,40 +144,40 @@ class CreateEditPostScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5.0),
                   child: Provider.of<StorageProvider>(context).postImage != null
                       ? Stack(
-                          alignment: AlignmentDirectional.topEnd,
-                          children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child: Image.file(
-                                File(
-                                  Provider.of<StorageProvider>(context)
-                                      .postImage!
-                                      .path,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CircleAvatar(
-                                backgroundColor: Colors.blueAccent,
-                                child: IconButton(
-                                  onPressed: () {
-                                    Provider.of<StorageProvider>(context,
-                                            listen: false)
-                                        .unpickPostImage();
-                                  },
-                                  icon: Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      : Container(
-                          width: 0,
+                    alignment: AlignmentDirectional.topEnd,
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Image.file(
+                          File(
+                            Provider.of<StorageProvider>(context)
+                                .postImage!
+                                .path,
+                          ),
                         ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.blueAccent,
+                          child: IconButton(
+                            onPressed: () {
+                              Provider.of<StorageProvider>(context,
+                                  listen: false)
+                                  .unpickPostImage();
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                      : Container(
+                    width: 0,
+                  ),
                 ),
               ),
             ],

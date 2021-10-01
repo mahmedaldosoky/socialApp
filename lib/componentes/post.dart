@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:social/componentes/default_text_field.dart';
 import 'package:social/models/post_model.dart';
 import 'package:social/providers/auth_provider.dart';
 import 'package:social/screens/comment_screen.dart';
@@ -9,6 +10,9 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:social/screens/create_post_screen.dart';
 
 class Post extends StatefulWidget {
+  int postMaxLines = 5;
+  TextEditingController newPostText =
+      TextEditingController(); // after edit post
   final PostModel post;
 
   Post({required this.post});
@@ -79,51 +83,75 @@ class _PostState extends State<Post> {
                   ),
                   Spacer(),
                   IconButton(
-                    onPressed: () {
-                      showBarModalBottomSheet(
-                        context: context,
-                        builder: (context) => Container(
-                          height: MediaQuery.of(context).size.height * .2,
-                          child: ListView(
-                            children: [
-                              ListTile(
-                                title: Text('Edit Post'),
-                                leading: Icon(Icons.edit),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (builder) =>
-                                          CreateEditPostScreen(
-                                        post: widget.post,
-                                      ),
+                    onPressed: widget.post.uid !=
+                            Provider.of<AuthProvider>(context)
+                                .currentUserData!
+                                .uid
+                        ? null
+                        : () {
+                            showBarModalBottomSheet(
+                              context: context,
+                              builder: (context) => Container(
+                                height: MediaQuery.of(context).size.height * .2,
+                                child: ListView(
+                                  children: [
+                                    ListTile(
+                                      title: Text('Edit Post'),
+                                      leading: Icon(Icons.edit),
+                                      onTap: () {
+                                        // Navigator.pop(context);
+                                /*        showBarModalBottomSheet(
+                                            context: context,
+                                            builder: (builder) {
+                                              return Container(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .3,
+                                                child: Center(
+                                                  child: TextField(
+                                                    controller:
+                                                        widget.newPostText,
+                                                    decoration:
+                                                        new InputDecoration(
+                                                      enabledBorder:
+                                                          const OutlineInputBorder(
+                                                        borderSide:
+                                                            const BorderSide(
+                                                                color:
+                                                                    Colors.grey,
+                                                                width: 55.0),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            });*/
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
-                              ListTile(
-                                title: Text(
-                                  'Delete Post',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
+                                    ListTile(
+                                      title: Text(
+                                        'Delete Post',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      leading: Icon(
+                                        Icons.delete_outline,
+                                        color: Colors.red,
+                                      ),
+                                      onTap: () async {
+                                        await Provider.of<AuthProvider>(context,
+                                                listen: false)
+                                            .deletePost(widget.post);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                leading: Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.red,
-                                ),
-                                onTap: () async {
-                                  await Provider.of<AuthProvider>(context,
-                                          listen: false)
-                                      .deletePost(widget.post);
-                                  Navigator.pop(context);
-                                },
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
+                            );
+                          },
                     icon: FaIcon(FontAwesomeIcons.ellipsisH),
                   ),
                 ],
@@ -140,18 +168,27 @@ class _PostState extends State<Post> {
                 height: 10,
               ),
               widget.post.text != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(bottom: 15.0, top: 5),
-                      child: Text(
-                        widget.post.text.toString(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(fontSize: 18),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 4,
-                      ),
-                    )
+                  ? Builder(builder: (context) {
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            widget.postMaxLines += 100;
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0, top: 5),
+                          child: Text(
+                            widget.post.text.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(fontSize: 18),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: widget.postMaxLines,
+                          ),
+                        ),
+                      );
+                    })
                   : Container(
                       width: 0,
                     ),
@@ -261,7 +298,7 @@ class _PostState extends State<Post> {
                         ),
                         FutureBuilder(
                           future: Provider.of<AuthProvider>(context)
-                              .getCommentsNum(widget.post),
+                              .getPostCommentsNum(widget.post),
                           builder: (BuildContext context,
                               AsyncSnapshot<String> snapshot) {
                             if (snapshot.hasData) {

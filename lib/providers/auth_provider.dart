@@ -157,19 +157,18 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future updatePostOnFireStore(PostModel post) async {
-    await firestore.collection('posts').doc('IjK2C0CrkrDHF6e0Zp6o').set(post.toMap()).then((value) async {
-      await firestore.collection('posts').doc('IjK2C0CrkrDHF6e0Zp6o').update({
-        'postId': 'IjK2C0CrkrDHF6e0Zp6o',
-      }); // Add postId to post doc in fireStore
-      print('uploaded post successfully');
-    }).catchError((onError) {
+    await firestore
+        .collection('posts')
+        .doc(post.postId)
+        .update(post.toMap())
+        .catchError((onError) {
       print(onError);
     });
   }
 
   Future<List<PostModel>> getPosts() async {
     posts = []; // delete posts before downloading posts
-    await firestore.collection('posts').get().then((value) {
+    await firestore.collection('posts').orderBy('dateTime',descending: true).get().then((value) {
       value.docs.forEach((element) {
         PostModel postData = PostModel.fromJson(element.data());
 
@@ -225,7 +224,7 @@ class AuthProvider extends ChangeNotifier {
     await Future.delayed(Duration(milliseconds: 700));
     return await postDocRef.get().then((value) {
       PostModel postData = PostModel.fromJson(value.data()!);
-      return postData.likesNum??'0'; // if No likes return 0 instead of null
+      return postData.likesNum ?? '0'; // if No likes return 0 instead of null
     });
   }
 
@@ -239,7 +238,6 @@ class AuthProvider extends ChangeNotifier {
 
   Future postLikeButtonClicked(PostModel post) async {
     await isPostLikedByMe(post) ? disLikePost(post) : likePost(post);
-
   }
 
   Future deletePost(PostModel post) async {
@@ -475,7 +473,7 @@ class AuthProvider extends ChangeNotifier {
 
       // add 1 to commentsNum
       String commentsNumPlusOne =
-          (int.parse(postData.commentsNum ?? '0') + 1).toString();
+          (int.parse(postData.commentsNum!) + 1).toString();
       await postDocRef.update({'commentsNum': commentsNumPlusOne});
 
       EmitProvider().emitAddCommentSuccessState();
@@ -484,7 +482,7 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-/*  Future<String> getPostCommentsNum(PostModel postData) async {
+  Future<String> getPostCommentsNum(PostModel postData) async {
     return await firestore
         .collection('posts')
         .doc(postData.postId)
@@ -493,9 +491,9 @@ class AuthProvider extends ChangeNotifier {
         .then((value) {
       return value.docs.length.toString();
     });
-  }*/
+  }
 
-  Future<String> getCommentsNum(PostModel post) async {
+/*  Future<String> getCommentsNum(PostModel post) async {
     var postDocRef = firestore.collection('posts').doc(post.postId);
 
     //  await Future.delayed(Duration(milliseconds: 700));
@@ -503,7 +501,7 @@ class AuthProvider extends ChangeNotifier {
       PostModel postData = PostModel.fromJson(value.data()!);
       return postData.commentsNum ?? '0';
     });
-  }
+  }*/
 
   Future<List<CommentModel>> getComments(PostModel post) async {
     var postDocRef = firestore.collection('posts').doc(post.postId);
