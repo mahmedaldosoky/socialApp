@@ -3,10 +3,7 @@
 Social media platform built on Flutter and Firebase
 
 # Show some ❤️ and star the repo to support the project
-
-
-![Alt text](https://l.top4top.io/p_2100nsleo1.png "Optional title")
-
+![a](https://user-images.githubusercontent.com/37597841/135648877-61e0caed-47cf-4814-bac5-d855dfb56655.jpg)
 
 
 ## Getting Started
