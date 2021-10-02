@@ -3,6 +3,7 @@
 #### Social media platform for Android and iOS built on Flutter and Firebase
 
 ### Show some ❤️ and star the repo to support the project
+![app Screens](https://user-images.githubusercontent.com/37597841/135725463-6400a0c2-8c31-45b3-9227-8230fb64c676.png)
 ![a](https://user-images.githubusercontent.com/37597841/135648877-61e0caed-47cf-4814-bac5-d855dfb56655.jpg)
 ### Features:
 - Register and login through email authentication
